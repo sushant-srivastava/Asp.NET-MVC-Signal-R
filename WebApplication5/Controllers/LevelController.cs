@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using WebApplication5.Filters;
 using WebApplication5.Models;
 
 namespace WebApplication5.Controllers
@@ -20,7 +21,8 @@ namespace WebApplication5.Controllers
             var levelModels = db.LevelModels.Include(l => l.Difficulty);
             return View(levelModels.ToList());
         }
-
+        [Authorize]
+        [TimeFilter]
         public ActionResult Question()
         {
             var user = db.Users.FirstOrDefault(x => x.UserName == User.Identity.Name);
@@ -32,7 +34,10 @@ namespace WebApplication5.Controllers
             return View(levelModel);
         }
 
+
+        [Authorize]
         [HttpPost]
+        [TimeFilter]
         public ActionResult Question(LevelModel model)
         {
             if (ModelState.IsValid)
@@ -53,12 +58,7 @@ namespace WebApplication5.Controllers
             return RedirectToAction("Question", "Level");
         }
 
-        private LevelModel GetNextModel(int levelId)
-        {
-            return db.LevelModels.FirstOrDefault(x => x.LevelId == levelId + 1);
-
-        }
-
+       
         // GET: LevelModels/Details/5
         [Authorize(Roles = "Admin")]
         public ActionResult Details(int? id)

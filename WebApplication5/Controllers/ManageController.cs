@@ -78,6 +78,7 @@ namespace WebApplication5.Controllers
         //
         // POST: /Manage/RemoveLogin
         [HttpPost]
+        [Authorize(Roles ="Admin")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RemoveLogin(string loginProvider, string providerKey)
         {
@@ -110,6 +111,7 @@ namespace WebApplication5.Controllers
         // POST: /Manage/AddPhoneNumber
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles ="Admin")]
         public async Task<ActionResult> AddPhoneNumber(AddPhoneNumberViewModel model)
         {
             if (!ModelState.IsValid)
@@ -134,6 +136,7 @@ namespace WebApplication5.Controllers
         // POST: /Manage/EnableTwoFactorAuthentication
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles ="Admin")]
         public async Task<ActionResult> EnableTwoFactorAuthentication()
         {
             await UserManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId(), true);
@@ -149,6 +152,7 @@ namespace WebApplication5.Controllers
         // POST: /Manage/DisableTwoFactorAuthentication
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles ="Admin")]
         public async Task<ActionResult> DisableTwoFactorAuthentication()
         {
             await UserManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId(), false);
@@ -162,6 +166,7 @@ namespace WebApplication5.Controllers
 
         //
         // GET: /Manage/VerifyPhoneNumber
+        [Authorize(Roles ="Admin")]
         public async Task<ActionResult> VerifyPhoneNumber(string phoneNumber)
         {
             var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), phoneNumber);
@@ -173,6 +178,7 @@ namespace WebApplication5.Controllers
         // POST: /Manage/VerifyPhoneNumber
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles ="Admin")]
         public async Task<ActionResult> VerifyPhoneNumber(VerifyPhoneNumberViewModel model)
         {
             if (!ModelState.IsValid)
@@ -196,6 +202,7 @@ namespace WebApplication5.Controllers
 
         //
         // GET: /Manage/RemovePhoneNumber
+        [Authorize(Roles ="Admin")]
         public async Task<ActionResult> RemovePhoneNumber()
         {
             var result = await UserManager.SetPhoneNumberAsync(User.Identity.GetUserId(), null);
@@ -276,6 +283,7 @@ namespace WebApplication5.Controllers
 
         //
         // GET: /Manage/ManageLogins
+        [Authorize(Roles ="Admin")]
         public async Task<ActionResult> ManageLogins(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
@@ -301,6 +309,7 @@ namespace WebApplication5.Controllers
         // POST: /Manage/LinkLogin
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles ="Admin")]
         public ActionResult LinkLogin(string provider)
         {
             // Request a redirect to the external login provider to link a login for the current user
@@ -309,6 +318,7 @@ namespace WebApplication5.Controllers
 
         //
         // GET: /Manage/LinkLoginCallback
+        [Authorize(Roles ="Admin")]
         public async Task<ActionResult> LinkLoginCallback()
         {
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(XsrfKey, User.Identity.GetUserId());

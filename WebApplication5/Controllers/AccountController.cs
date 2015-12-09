@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using WebApplication5.Models;
+using WebApplication5.Filters;
 
 namespace WebApplication5.Controllers
 {
@@ -55,6 +56,7 @@ namespace WebApplication5.Controllers
         //
         // GET: /Account/Login
         [AllowAnonymous]
+        [TimeFilter]
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
@@ -66,6 +68,7 @@ namespace WebApplication5.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [TimeFilter]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
