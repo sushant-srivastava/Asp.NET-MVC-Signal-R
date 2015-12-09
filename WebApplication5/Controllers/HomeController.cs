@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WebApplication5.Models;
 
 namespace WebApplication5.Controllers
 {
@@ -13,18 +14,27 @@ namespace WebApplication5.Controllers
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult LeaderBoard()
         {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.Message = "Top 5 Users are";
 
             return View();
         }
 
-        public ActionResult Contact()
+      
+        public ActionResult Feedback()
         {
-            ViewBag.Message = "Your contact page.";
-
+            ViewBag.Message = "Thank you for your time, please give us your valuable feedback";
             return View();
+        }
+        [HttpPost]
+        public ActionResult Feedback(FeedbackModel model)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            db.FeedBackModels.Add(new FeedbackModel() { Comments = model.Comments});
+            db.SaveChanges();
+            db.Dispose();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

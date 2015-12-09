@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.ComponentModel.DataAnnotations;
+using System;
 
 namespace WebApplication5.Models
 {
@@ -34,6 +35,8 @@ namespace WebApplication5.Models
                 base.PasswordHash = value;
             }
         }
+        public DateTime Updated { get; set; } = DateTime.Now;
+
         [ScaffoldColumn(false)]
         public int LevelId { get; set; }
         public virtual LevelModel Level { get; set; }
@@ -71,6 +74,7 @@ namespace WebApplication5.Models
         public System.Data.Entity.DbSet<WebApplication5.Models.LevelModel> LevelModels { get; set; }
 
         public System.Data.Entity.DbSet<WebApplication5.Models.DifficultyModel> DifficultyModels { get; set; }
+        public System.Data.Entity.DbSet<FeedbackModel> FeedBackModels { get; set; }
         public bool Seed(ApplicationDbContext context)
         {
             bool success = true;
@@ -82,8 +86,13 @@ namespace WebApplication5.Models
             context.DifficultyModels.Add(new DifficultyModel() { Description = "Normal" });
             context.DifficultyModels.Add(new DifficultyModel() { Description = "Hard" });
             context.SaveChanges();
-            context.LevelModels.Add(new LevelModel() { Question = "What is the key", Answer = "AAbbccddffgg", DifficultyId = 1, Hint = "Answer is in this page" });
-            context.SaveChanges();
+            context.LevelModels.Add(new LevelModel() { Question = "What is the key", Answer = "AAbbccddffgg", DifficultyId = 1, Hint = "" });
+            context.LevelModels.Add(new LevelModel() { Question = "What is the 1", Answer = "1", DifficultyId = 1, Hint = "" });
+            context.LevelModels.Add(new LevelModel() { Question = "What is the 2", Answer = "2", DifficultyId = 1, Hint = "" });
+            var x = new LevelModel() { Question = "What is the 3", Answer = "3", DifficultyId = 1, Hint = "" };
+            context.LevelModels.Add(x);     
+            context.LevelModels.Add(new LevelModel() { Question = "Complete", Answer = "xxx", DifficultyId = 1, Hint = "" });   
+            context.SaveChanges();            
             ApplicationUserManager userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(context));
             var adminUser = new ApplicationUser() { UserName = "Admin", LevelId = 1 };
             userManager.Create(adminUser, "Password@123");

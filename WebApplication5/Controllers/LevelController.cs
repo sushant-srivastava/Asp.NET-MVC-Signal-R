@@ -13,7 +13,6 @@ namespace WebApplication5.Controllers
     public class LevelController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-
         // GET: LevelModels
         [Authorize(Roles = "Admin")]
         public ActionResult Index()
@@ -25,6 +24,9 @@ namespace WebApplication5.Controllers
         public ActionResult Question()
         {
             var user = db.Users.FirstOrDefault(x => x.UserName == User.Identity.Name);
+            var levelId = db.LevelModels.FirstOrDefault(x => x.Question == "Complete").LevelId;
+            if (levelId == user.LevelId)
+                return RedirectToAction("Feedback", "Home");
             LevelModel levelModel = db.LevelModels.Find(user.LevelId);
             levelModel.Answer = string.Empty;
             return View(levelModel);
@@ -40,28 +42,25 @@ namespace WebApplication5.Controllers
                 var expected = db.LevelModels.Find(user.LevelId).Answer;
                 if (string.Equals(actual.Trim(), expected, StringComparison.OrdinalIgnoreCase))
                 {
-                    var nextModel = GetNextModel(model.LevelId);
-                    if(nextModel != null)
-                    {
-                        user.LevelId += 1;
-                        db.Entry(user).State = EntityState.Modified;
-                        db.SaveChanges();
-                        ModelState.Clear();
-                        return View(nextModel);
-                    }
+                    int? levelId = db.LevelModels?.OrderBy(x => x.LevelId)?.FirstOrDefault(x => x.LevelId > user.LevelId)?.LevelId ;                    
+                    user.LevelId = levelId.Value;
+                    user.Updated = DateTime.Now;
+                    db.Entry(user).State = EntityState.Modified;
+                    db.SaveChanges();                    
                 }
             }
             ModelState.Clear();
-            return View(model);
+            return RedirectToAction("Question", "Level");
         }
 
         private LevelModel GetNextModel(int levelId)
         {
             return db.LevelModels.FirstOrDefault(x => x.LevelId == levelId + 1);
-            
+
         }
 
         // GET: LevelModels/Details/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -77,6 +76,7 @@ namespace WebApplication5.Controllers
         }
 
         // GET: LevelModels/Create
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             ViewBag.DifficultyId = new SelectList(db.DifficultyModels, "Id", "Description");
@@ -88,6 +88,7 @@ namespace WebApplication5.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create([Bind(Include = "Id,Question,Answer,DifficultyId")] LevelModel levelModel)
         {
             if (ModelState.IsValid)
@@ -102,6 +103,7 @@ namespace WebApplication5.Controllers
         }
 
         // GET: LevelModels/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -122,6 +124,7 @@ namespace WebApplication5.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit([Bind(Include = "Id,Question,Answer,DifficultyId")] LevelModel levelModel)
         {
             if (ModelState.IsValid)
@@ -135,6 +138,7 @@ namespace WebApplication5.Controllers
         }
 
         // GET: LevelModels/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -152,6 +156,7 @@ namespace WebApplication5.Controllers
         // POST: LevelModels/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult DeleteConfirmed(int id)
         {
             LevelModel levelModel = db.LevelModels.Find(id);
