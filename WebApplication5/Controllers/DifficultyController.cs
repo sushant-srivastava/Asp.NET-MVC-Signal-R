@@ -15,12 +15,14 @@ namespace WebApplication5.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: DifficultyModels
+        [Authorize]
         public ActionResult Index()
         {
             return View(db.DifficultyModels.ToList());
         }
 
         // GET: DifficultyModels/Details/5
+        [Authorize]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -46,6 +48,7 @@ namespace WebApplication5.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create([Bind(Include = "Id,Description")] DifficultyModel difficultyModel)
         {
             if (ModelState.IsValid)
@@ -59,6 +62,7 @@ namespace WebApplication5.Controllers
         }
 
         // GET: DifficultyModels/Edit/5
+        [Authorize]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -78,6 +82,7 @@ namespace WebApplication5.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit([Bind(Include = "Id,Description")] DifficultyModel difficultyModel)
         {
             if (ModelState.IsValid)
@@ -90,6 +95,7 @@ namespace WebApplication5.Controllers
         }
 
         // GET: DifficultyModels/Delete/5
+        [Authorize]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -106,6 +112,7 @@ namespace WebApplication5.Controllers
 
         // POST: DifficultyModels/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
