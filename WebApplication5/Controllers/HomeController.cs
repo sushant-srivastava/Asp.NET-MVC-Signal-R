@@ -48,5 +48,10 @@ namespace WebApplication5.Controllers
         {
             return View();
         }
+
+        public ActionResult Thanks()
+        {
+            return View();
+        }
     }
 }

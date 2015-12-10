@@ -278,6 +278,7 @@
     <Content Include="Views\Difficulty\Index.cshtml" />
     <Content Include="Views\Level\Question.cshtml" />
     <Content Include="Views\Home\Wait.cshtml" />
+    <Content Include="Views\Home\Thanks.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
